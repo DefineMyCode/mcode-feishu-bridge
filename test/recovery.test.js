@@ -4,7 +4,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { TaskStore } from "../src/taskstore.js";
-import { recoverTasks, taskToMessage } from "../src/recovery.js";
+import { recoverTasks, syncWorkspace, taskToMessage } from "../src/recovery.js";
 
 function makeStore() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "recovery-"));
@@ -217,5 +217,41 @@ test("主动停止的任务不会被重投", async () => {
   assert.equal(result.requeued, 0);
   assert.equal(notified.length, 0);
   assert.equal(store.getTask(id).status, "stopped");
+  store.close();
+});
+
+test("首次启动记录工作目录且不清空会话", () => {
+  const store = makeStore();
+  store.setSession("oc_1", "mvs_1");
+  const result = syncWorkspace(store, "/root/mcode-workspace");
+  assert.equal(result.changed, false);
+  assert.equal(store.getMeta("workspace"), "/root/mcode-workspace");
+  assert.equal(store.countSessions(), 1);
+  store.close();
+});
+
+test("工作目录变更时清空旧会话映射并更新记录", () => {
+  const store = makeStore();
+  store.setSession("oc_1", "mvs_1");
+  store.setMeta("workspace", "/root/old-workspace");
+  const warnings = [];
+  const result = syncWorkspace(store, "/root/new-workspace", {
+    warn: (message) => warnings.push(message),
+  });
+  assert.equal(result.changed, true);
+  assert.equal(result.cleared, 1);
+  assert.equal(store.countSessions(), 0);
+  assert.equal(store.getMeta("workspace"), "/root/new-workspace");
+  assert.equal(warnings.length, 1);
+  store.close();
+});
+
+test("工作目录未变时保留会话映射", () => {
+  const store = makeStore();
+  store.setSession("oc_1", "mvs_1");
+  store.setMeta("workspace", "/root/mcode-workspace");
+  const result = syncWorkspace(store, "/root/mcode-workspace");
+  assert.equal(result.changed, false);
+  assert.equal(store.countSessions(), 1);
   store.close();
 });

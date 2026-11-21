@@ -58,3 +58,17 @@ export function taskToMessage(task) {
     senderId: meta.senderId || "",
   };
 }
+
+export function syncWorkspace(store, workdir, logger) {
+  const previous = store.getMeta("workspace");
+  if (previous && previous !== workdir) {
+    const cleared = store.clearAllSessions();
+    store.setMeta("workspace", workdir);
+    logger?.warn?.(
+      `工作目录已从 ${previous} 变为 ${workdir}，已清空 ${cleared} 个会话映射`,
+    );
+    return { changed: true, cleared, previous };
+  }
+  if (!previous) store.setMeta("workspace", workdir);
+  return { changed: false, cleared: 0, previous };
+}

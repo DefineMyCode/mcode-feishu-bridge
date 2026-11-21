@@ -157,6 +157,17 @@ export class TaskStore {
     return Number(row?.value || 0);
   }
 
+  getMeta(key) {
+    const row = this.db.prepare("SELECT value FROM meta WHERE key = ?").get(key);
+    return row?.value ?? "";
+  }
+
+  setMeta(key, value) {
+    this.db
+      .prepare("INSERT OR REPLACE INTO meta(key, value) VALUES(?, ?)")
+      .run(key, String(value));
+  }
+
   createTask({
     id = createTaskId(),
     sessionKey,
@@ -322,6 +333,10 @@ export class TaskStore {
 
   countSessions() {
     return Number(this.db.prepare("SELECT COUNT(*) AS c FROM sessions").get().c);
+  }
+
+  clearAllSessions() {
+    return Number(this.db.prepare("DELETE FROM sessions").run().changes);
   }
 
   hasSeen(messageId, { ttlMs = 0, now = Date.now() } = {}) {

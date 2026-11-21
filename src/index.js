@@ -10,7 +10,7 @@ import { createMessageHandler } from "./handler.js";
 import { runMcp } from "./mcode.js";
 import { cleanMediaDir } from "./media.js";
 import { TaskStore } from "./taskstore.js";
-import { recoverTasks } from "./recovery.js";
+import { recoverTasks, syncWorkspace } from "./recovery.js";
 import { buildProgressCard } from "./card.js";
 import { createScheduler } from "./scheduler.js";
 
@@ -32,6 +32,7 @@ if (migration.sessions > 0 || migration.dedup > 0) {
   logger.info(`已从 JSON 迁移 ${migration.sessions} 条会话、${migration.dedup} 条去重记录`);
 }
 store.pruneDedup({ ttlMs: config.dedupTtlMs, max: config.dedupMax });
+syncWorkspace(store, config.workdir, logger);
 
 const sessions = new SessionStore(config.stateFile, { logger, store }).load();
 const queue = new TaskQueue({ maxConcurrency: config.maxConcurrency });
