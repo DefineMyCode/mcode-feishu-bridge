@@ -44,6 +44,7 @@ const lark = new LarkCli({
   identity: config.larkIdentity,
   eventKey: config.eventKey,
   logger,
+  baseArgs: config.larkProfile ? ["--profile", config.larkProfile] : [],
 });
 
 const version = await lark.version();
@@ -142,6 +143,7 @@ const cardLark = new LarkCli({
   identity: config.larkIdentity,
   eventKey: "card.action.trigger",
   logger,
+  baseArgs: config.larkProfile ? ["--profile", config.larkProfile] : [],
 });
 const cardConsumer = cardLark.startConsuming({
   onEvent: (event) => {

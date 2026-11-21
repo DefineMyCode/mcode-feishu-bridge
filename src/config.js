@@ -93,6 +93,7 @@ export function loadConfig(env = process.env) {
 
   return {
     larkBin: env.LARK_CLI_BIN || "lark-cli",
+    larkProfile: env.LARK_PROFILE || "",
     larkIdentity: env.LARK_IDENTITY || "bot",
     eventKey: env.LARK_EVENT_KEY || "im.message.receive_v1",
     botName: env.BOT_NAME || "",
