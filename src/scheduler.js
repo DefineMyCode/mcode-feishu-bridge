@@ -1,3 +1,4 @@
+import path from "node:path";
 import { summarizeResult } from "./mcode.js";
 
 export function parseCronTasks(raw) {
@@ -95,6 +96,11 @@ export function createScheduler({
             model: config.model,
             effort: config.effort,
             promptMode: config.promptMode,
+            mode: config.mode,
+            ptc: config.ptc,
+            diagnosticsDir: config.diagnostics
+              ? path.join(config.diagnosticsDir, `cron_${Date.now()}`)
+              : "",
             permission: config.permission,
             timeoutMs: config.timeoutMs,
             maxSteps: config.maxSteps,

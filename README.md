@@ -53,10 +53,14 @@ TASK_DB=/root/mcode-feishu-bridge/data/tasks.db
 | `MCODE_WORKDIR` | 必填 | mcode 的工作目录 |
 | `TASK_DB` | 必填 | 任务库绝对路径 |
 | `MCODE_BIN` | `mcode` | mcode 可执行文件 |
-| `MCODE_PERMISSION` | `smart` | `smart` / `full` / `off` |
+| `MCODE_PERMISSION` | `smart` | `smart` / `full` / `off`；本机示例配置为 `full` |
 | `MCODE_MODEL` | 空 | 默认模型，形如 `provider/model` |
 | `MCODE_EFFORT` | 空 | 默认推理强度 |
 | `MCODE_PROMPT_MODE` | `tui` | `tui` / `coding` / `work` |
+| `MCODE_MODE` | `standard` | 上下文模式：`standard` / `lightweight` |
+| `MCODE_PTC` | `false` | 是否启用 Programmatic Tool Calling（`--ptc`） |
+| `MCODE_DIAGNOSTICS` | `true` | 是否保存执行诊断 |
+| `MCODE_DIAGNOSTICS_DIR` | `./data/diagnostics` | 诊断根目录，按任务 ID 分子目录 |
 | `MCODE_TIMEOUT_MS` | `1800000` | 单任务超时 |
 | `MCODE_MAX_STEPS` | `0` | 最大步数，0 表示不限制 |
 | `GROUP_SESSIONS_PER_USER` | `true` | 群内按发言人隔离上下文 |

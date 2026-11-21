@@ -111,6 +111,14 @@ test("mcode 与任务队列配置有默认值且可覆盖", () => {
   assert.equal(config.taskRetentionDays, 30);
   assert.equal(config.timeoutMs, 1800000);
   assert.equal(config.maxSteps, 0);
+  assert.equal(config.mode, "standard");
+  assert.equal(config.ptc, false);
+  assert.equal(config.diagnostics, true);
+  assert.match(config.diagnosticsDir, /data\/diagnostics$/);
+  assert.equal(loadConfig({ ...base, MCODE_MODE: "lightweight" }).mode, "lightweight");
+  assert.equal(loadConfig({ ...base, MCODE_PTC: "true" }).ptc, true);
+  assert.equal(loadConfig({ ...base, MCODE_DIAGNOSTICS: "false" }).diagnostics, false);
+  assert.throws(() => loadConfig({ ...base, MCODE_MODE: "huge" }), /MCODE_MODE/);
   assert.equal(loadConfig({ ...base, MCODE_MAX_STEPS: "40" }).maxSteps, 40);
   assert.equal(loadConfig({ ...base, TASK_AUTO_RETRY: "false" }).taskAutoRetry, false);
   assert.equal(loadConfig({ ...base, TASK_MAX_ATTEMPTS: "3" }).taskMaxAttempts, 3);

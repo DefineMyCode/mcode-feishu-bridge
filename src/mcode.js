@@ -17,12 +17,18 @@ export function buildArgs({
   model = "",
   effort = "",
   promptMode = "",
+  mode = "",
+  ptc = false,
+  diagnosticsDir = "",
   permission = "smart",
   files = [],
   maxSteps = 0,
   timeoutMs = 0,
 } = {}) {
   const args = ["exec", "--output-format", "stream-json", "--permission", permission];
+  if (mode) args.push("--mode", mode);
+  if (ptc) args.push("--ptc");
+  if (diagnosticsDir) args.push("--diagnostics-dir", diagnosticsDir);
   if (sessionId) args.push("--session", sessionId);
   if (model) args.push("--model", model);
   if (effort) args.push("--effort", effort);
@@ -44,6 +50,9 @@ export function runMcp({
   model = "",
   effort = "",
   promptMode = "",
+  mode = "",
+  ptc = false,
+  diagnosticsDir = "",
   permission = "smart",
   files = [],
   maxSteps = 0,
@@ -60,6 +69,9 @@ export function runMcp({
       model,
       effort,
       promptMode,
+      mode,
+      ptc,
+      diagnosticsDir,
       permission,
       files,
       maxSteps,

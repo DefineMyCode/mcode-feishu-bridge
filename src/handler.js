@@ -516,6 +516,11 @@ export function createMessageHandler({
           model: modelOverrides.get(key) || config.model,
           effort: effortOverrides.get(key) || config.effort,
           promptMode: config.promptMode,
+          mode: config.mode,
+          ptc: config.ptc,
+          diagnosticsDir: config.diagnostics
+            ? path.join(config.diagnosticsDir, taskId || `run_${Date.now()}`)
+            : "",
           permission: config.permission,
           files: prepared.files,
           maxSteps: config.maxSteps,

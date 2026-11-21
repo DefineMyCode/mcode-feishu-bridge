@@ -27,6 +27,7 @@ function list(value) {
 
 const REPLY_FORMATS = ["card", "post", "text"];
 const GROUP_POLICIES = ["open", "allowlist", "disabled"];
+const MODES = ["standard", "lightweight"];
 
 function parseGroupRules(raw) {
   if (!raw || !String(raw).trim()) return {};
@@ -86,6 +87,11 @@ export function loadConfig(env = process.env) {
     throw new Error('MCODE_PROMPT_MODE 只能是 "tui"、"coding" 或 "work"');
   }
 
+  const mode = (env.MCODE_MODE || "standard").toLowerCase();
+  if (!MODES.includes(mode)) {
+    throw new Error('MCODE_MODE 只能是 "standard" 或 "lightweight"');
+  }
+
   const groupPolicy = (env.GROUP_POLICY || "open").toLowerCase();
   if (!GROUP_POLICIES.includes(groupPolicy)) {
     throw new Error('GROUP_POLICY 只能是 "open"、"allowlist" 或 "disabled"');
@@ -108,6 +114,10 @@ export function loadConfig(env = process.env) {
     model: env.MCODE_MODEL || "",
     effort: env.MCODE_EFFORT || "",
     promptMode,
+    mode,
+    ptc: bool(env.MCODE_PTC, false),
+    diagnostics: bool(env.MCODE_DIAGNOSTICS, true),
+    diagnosticsDir: path.resolve(env.MCODE_DIAGNOSTICS_DIR || "./data/diagnostics"),
     permission,
     timeoutMs: int(env.MCODE_TIMEOUT_MS, 1800000),
     maxSteps: nonNegativeInt(env.MCODE_MAX_STEPS, 0),
