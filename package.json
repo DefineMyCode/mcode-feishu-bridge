@@ -1,0 +1,16 @@
+{
+  "name": "mcode-feishu-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Feishu bridge for MiniMax Code CLI (mcode), with sessions, task persistence and interactive cards",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "license": "MIT"
+}
